@@ -1,0 +1,38 @@
+[gd_scene load_steps=9 format=3 uid="uid://3m67nlyxempq"]
+
+[ext_resource type="Script" path="res://scripts/static/camera.gd" id="1_k0oc1"]
+[ext_resource type="Texture2D" uid="uid://cvf3gxjqj2g3l" path="res://assets/images/sky/solid.jpg" id="1_vkg1b"]
+[ext_resource type="PackedScene" uid="uid://dc00gi0yugkic" path="res://prefabs/menu/ui.tscn" id="3_tm35m"]
+[ext_resource type="Script" path="res://scripts/static/stars.gd" id="4_bplbk"]
+[ext_resource type="Script" path="res://scripts/static/fetch_info.gd" id="5_jxv7x"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_jgjgy"]
+panorama = ExtResource("1_vkg1b")
+
+[sub_resource type="Sky" id="Sky_mpvso"]
+sky_material = SubResource("PanoramaSkyMaterial_jgjgy")
+
+[sub_resource type="Environment" id="Environment_fgj0m"]
+background_mode = 2
+sky = SubResource("Sky_mpvso")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fgj0m")
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("Ui", "FetchInfo")]
+script = ExtResource("1_k0oc1")
+Ui = NodePath("ui")
+FetchInfo = NodePath("../Fetch Info")
+constellation_color = Color(0.662745, 0.662745, 0.760784, 1)
+
+[node name="ui" parent="Camera3D" instance=ExtResource("3_tm35m")]
+
+[node name="Stars" type="Node3D" parent="." node_paths=PackedStringArray("Infos")]
+script = ExtResource("4_bplbk")
+Infos = NodePath("../Fetch Info")
+
+[node name="Fetch Info" type="Node3D" parent="." node_paths=PackedStringArray("Ui")]
+script = ExtResource("5_jxv7x")
+Ui = NodePath("../Camera3D/ui")

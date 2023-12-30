@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://dr2m3bfw0ckl5"]
+
+[ext_resource type="Script" path="res://scripts/static/lone_star.gd" id="1_qw4bg"]
+[ext_resource type="Shader" path="res://assets/shader/star.gdshader" id="2_f7uf0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dn5t6"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_f7uf0")
+shader_parameter/mag = 0.0
+shader_parameter/temp = 7000.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_6ftfw"]
+material = SubResource("ShaderMaterial_dn5t6")
+
+[node name="Star" type="Node3D" node_paths=PackedStringArray("mesh")]
+script = ExtResource("1_qw4bg")
+mesh = NodePath("Mesh")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_6ftfw")
+skeleton = NodePath("")

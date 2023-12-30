@@ -1,0 +1,156 @@
+[gd_scene load_steps=6 format=3 uid="uid://dkrvblbfk6oc4"]
+
+[ext_resource type="Script" path="res://scripts/menu/master_sound_buttons.gd" id="1_1kvqo"]
+[ext_resource type="Theme" uid="uid://cqr0axdb4bodp" path="res://assets/themes/base.tres" id="1_8nk58"]
+[ext_resource type="PackedScene" uid="uid://i0xese720ivl" path="res://prefabs/menu/base_button.tscn" id="2_bwaqe"]
+[ext_resource type="Script" path="res://scripts/menu/sfx_buttons.gd" id="4_k4eme"]
+[ext_resource type="Script" path="res://scripts/menu/music_buttons.gd" id="5_swdik"]
+
+[node name="Options" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 200
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="MasterSound" type="HBoxContainer" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+script = ExtResource("1_1kvqo")
+
+[node name="MasterLabel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("1_8nk58")
+text = "Master Sound"
+
+[node name="MasterDecrease" parent="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+button_title = "-"
+custom_size = 40.0
+next = NodePath("../MasterIncrease")
+previous = NodePath("../../../Main Menu")
+
+[node name="MasterLevel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme = ExtResource("1_8nk58")
+text = "50"
+horizontal_alignment = 1
+
+[node name="MasterIncrease" parent="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_vertical = 4
+button_title = "+"
+custom_size = 40.0
+next = NodePath("../../Sfx/SfxDecrease")
+previous = NodePath("../MasterDecrease")
+
+[node name="Sfx" type="HBoxContainer" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+script = ExtResource("4_k4eme")
+
+[node name="SfxLabel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer/Sfx"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("1_8nk58")
+text = "Sfx"
+
+[node name="SfxDecrease" parent="MarginContainer/VBoxContainer2/VBoxContainer/Sfx" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+button_title = "-"
+custom_size = 40.0
+next = NodePath("../SfxIncrease")
+previous = NodePath("../../MasterSound/MasterIncrease")
+
+[node name="SfxLevel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer/Sfx"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme = ExtResource("1_8nk58")
+text = "50"
+horizontal_alignment = 1
+
+[node name="SfxIncrease" parent="MarginContainer/VBoxContainer2/VBoxContainer/Sfx" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_vertical = 4
+button_title = "+"
+custom_size = 40.0
+next = NodePath("../../Music/MusicDecrease")
+previous = NodePath("../SfxDecrease")
+
+[node name="Music" type="HBoxContainer" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+script = ExtResource("5_swdik")
+
+[node name="MusicLabel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer/Music"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("1_8nk58")
+text = "Music"
+
+[node name="MusicDecrease" parent="MarginContainer/VBoxContainer2/VBoxContainer/Music" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+button_title = "-"
+custom_size = 40.0
+next = NodePath("../MusicIncrease")
+previous = NodePath("../../Sfx/SfxIncrease")
+
+[node name="MusicLevel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer/Music"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme = ExtResource("1_8nk58")
+text = "50"
+horizontal_alignment = 1
+
+[node name="MusicIncrease" parent="MarginContainer/VBoxContainer2/VBoxContainer/Music" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_vertical = 4
+button_title = "+"
+custom_size = 40.0
+next = NodePath("../../../Main Menu")
+previous = NodePath("../MusicDecrease")
+
+[node name="Main Menu" parent="MarginContainer/VBoxContainer2" node_paths=PackedStringArray("next", "previous") instance=ExtResource("2_bwaqe")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+button_title = "Main Menu"
+next = NodePath("../VBoxContainer/MasterSound/MasterDecrease")
+previous = NodePath("../VBoxContainer/Music/MusicIncrease")
+
+[connection signal="activate" from="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound/MasterDecrease" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_master_decrease_activate"]
+[connection signal="activate" from="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound/MasterIncrease" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_master_increase_activate"]
+[connection signal="activate" from="MarginContainer/VBoxContainer2/VBoxContainer/Sfx/SfxDecrease" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_sfx_decrease_activate"]
+[connection signal="activate" from="MarginContainer/VBoxContainer2/VBoxContainer/Sfx/SfxIncrease" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_sfx_increase_activate"]
+[connection signal="activate" from="MarginContainer/VBoxContainer2/VBoxContainer/Music/MusicDecrease" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_music_decrease_activate"]
+[connection signal="activate" from="MarginContainer/VBoxContainer2/VBoxContainer/Music/MusicIncrease" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_music_increase_activate"]
+[connection signal="activate" from="MarginContainer/VBoxContainer2/Main Menu" to="MarginContainer/VBoxContainer2/VBoxContainer/MasterSound" method="_on_main_menu_activate"]

@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://dc00gi0yugkic"]
+
+[ext_resource type="Script" path="res://scripts/menu/ui.gd" id="1_w0g83"]
+[ext_resource type="Script" path="res://scripts/tools/debug.gd" id="2_bo6kx"]
+
+[node name="ui" type="CanvasLayer" node_paths=PackedStringArray("TextLabel", "DebugLabel", "DrawingBoard")]
+script = ExtResource("1_w0g83")
+TextLabel = NodePath("text")
+DebugLabel = NodePath("debug")
+DrawingBoard = NodePath("DrawingBoard")
+
+[node name="text" type="RichTextLabel" parent="."]
+offset_left = 27.0
+offset_top = 21.0
+offset_right = 402.0
+offset_bottom = 507.0
+
+[node name="debug" type="RichTextLabel" parent="."]
+offset_left = 1245.0
+offset_top = 21.0
+offset_right = 1580.0
+offset_bottom = 507.0
+
+[node name="DrawingBoard" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_bo6kx")
