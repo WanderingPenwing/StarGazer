@@ -1,25 +1,21 @@
 extends Control
 
-const width = 2
+const width = 3
 
 var draw_lines : Array
+var draw_points : Array
+
 
 func _draw() :
 	for line in draw_lines :
 		draw_line(line["start"], line["end"], line["color"], width)
+	
+	for point in draw_points :
+		draw_circle(point["pos"], width / 2, point["color"])
 
 
 
-#func draw_triangle(pos, dir, color, _size):
-#	var a = pos + dir * _size
-#	var b = pos + dir.rotated(2*PI/3) * _size
-#	var c = pos + dir.rotated(4*PI/3) * _size
-#	var points = PackedVector2Array([a, b, c])
-#	draw_polygon(points, PackedColorArray([color]))
-
-
-
-func update_drawing(_draw_info : Array) :
-	draw_lines = _draw_info
-	self.hide()
-	self.show()
+func update_drawing(_draw_lines : Array, _draw_points : Array = []) :
+	draw_lines = _draw_lines
+	draw_points = _draw_points
+	queue_redraw()

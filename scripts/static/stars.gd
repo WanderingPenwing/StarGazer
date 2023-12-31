@@ -7,10 +7,17 @@ const RADIUS : float = 40
 
 @export var Infos : Node
 
+@onready var Gamestate : Node = get_node("/root/GameState")
+
+
 
 func _ready() -> void:
 	var Stars = load_stars()
-	show_stars(Stars)
+	
+	if Gamestate.ALTERNATIVE :
+		format_stars_alt(Stars)
+	else :
+		show_stars(Stars)
 	
 	var Consts = load_constellations()
 	format_constellations(Consts)
@@ -44,39 +51,74 @@ func show_stars(Stars : Array) -> void :
 		child.queue_free()
 	
 	var progress = 0
-#
-#	for star_data in Stars :
-#		progress += 1
-#		if progress % 1000 == 0 :
-#			print("Loading... ", str(round(100.0*progress/len(Stars))), " %")
-#
-#		if not star_data :
-#			continue
-#
-#		var star = STAR.instantiate()
-#		add_child(star)
-#
-#		star.global_position = cartesian_from_text(star_data["RA"], star_data["Dec"])
-#		var m = star.mesh.get_active_material(0).duplicate()  
-#		m.set_shader_parameter("mag", float(star_data["V"]))  
-#		star.mesh.set_surface_override_material(0, m)
-#
-#		if star_data.has("N") :
-#			star.designation = star_data["N"]
-#		if star_data.has("C") :
-#			star.constellation = star_data["C"]
-#			star.add_to_group(star_data["C"])
-#
-#		var key = str(round(star.global_position * Infos.PRECISION / RADIUS))
-#
-#		if Infos.Partition.has(key) :
-#			Infos.Partition[key].append(star)
-#		else :
-#			Infos.Partition.merge({key : [star]})
+
+	for star_data in Stars :
+		progress += 1
+		if progress % 1000 == 0 :
+			print("Loading... ", str(round(100.0*progress/len(Stars))), " %")
+
+		if not star_data :
+			continue
+
+		var star = STAR.instantiate()
+		add_child(star)
+
+		star.global_position = cartesian_from_text(star_data["RA"], star_data["Dec"])
+		var m = star.mesh.get_active_material(0).duplicate()  
+		m.set_shader_parameter("mag", float(star_data["V"]))  
+		star.mesh.set_surface_override_material(0, m)
+
+		if star_data.has("N") :
+			star.designation = star_data["N"]
+		if star_data.has("C") :
+			star.constellation = star_data["C"]
+			star.add_to_group(star_data["C"])
+
+		var key = str(round(star.global_position * Infos.PRECISION / RADIUS))
+
+		if Infos.Partition.has(key) :
+			Infos.Partition[key].append(star)
+		else :
+			Infos.Partition.merge({key : [star]})
 		
 	print("Partitions : ", len(Infos.Partition))
-#	@warning_ignore("integer_division")
-#	print("Stars per Partition : ", len(Stars)/len(Infos.Partition))
+	@warning_ignore("integer_division")
+	print("Stars per Partition : ", len(Stars)/len(Infos.Partition))
+
+
+
+func format_stars_alt(Stars : Array) -> void :
+	var progress = 0
+
+	for star_data in Stars :
+		progress += 1
+		if progress % 1000 == 0 :
+			print("Loading... ", str(round(100.0*progress/len(Stars))), " %")
+
+		if not star_data :
+			continue
+			
+		var star = {"pos" : Vector2.ZERO, "name" : "", "color" : Color(0, 0, 0)}
+		
+		star["pos"] = cartesian_from_text(star_data["RA"], star_data["Dec"])
+		
+		var brightness = max(0, min(1.0, 1.0 - float(star_data["V"])/7.0))
+		star["color"] = Color(brightness, brightness, brightness)
+
+		if star_data.has("N") :
+			star["name"] = star_data["N"]
+
+		var key = round(star["pos"] * Infos.PRECISION / RADIUS)
+
+		if Infos.Partition.has(key) :
+			Infos.Partition[key].append(star)
+		else :
+			Infos.Partition.merge({key : [star]})
+		
+	print(Infos.Partition[Infos.Partition.keys().pick_random()].pick_random())
+	print("Partitions : ", len(Infos.Partition))
+	@warning_ignore("integer_division")
+	print("Stars per Partition : ", len(Stars)/len(Infos.Partition))
 
 
 

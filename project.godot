@@ -22,6 +22,10 @@ SoundsManager="*res://prefabs/tools/sounds_manager.tscn"
 GameState="*res://prefabs/tools/game_state.tscn"
 SceneTransition="*res://prefabs/tools/scene_transition.tscn"
 
+[debug]
+
+settings/stdout/print_gpu_profile=true
+
 [display]
 
 window/size/viewport_width=1600

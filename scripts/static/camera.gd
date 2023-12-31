@@ -6,6 +6,8 @@ const MIN_FOV : float = 15
 const MAX_FOV : float = 90
 const ZOOM_SLIP = 0.7
 
+
+
 @export var Ui : Node
 @export var FetchInfo : Node
 @export var constellation_color : Color
@@ -18,9 +20,24 @@ var min_fps : float = 1000
 var number_frames : int
 var display_constellations : bool = false
 
+@onready var Gamestate : Node = get_node("/root/GameState")
+
+
+
+func _ready() -> void :
+	if Gamestate.ALTERNATIVE :
+		Ui.clear_points()
+		show_stars_alt()
+
+		Ui.show_drawing()
+	
+	Ui.print_text("Esc : show constellations", 2)
+
 
 
 func _process(delta: float) -> void :
+	var moved : bool = false
+	
 	fps(delta)
 	
 	zoom()
@@ -30,6 +47,15 @@ func _process(delta: float) -> void :
 	rotate_screen()
 	
 	hud_constellations()
+	
+	if Gamestate.ALTERNATIVE :
+		Ui.clear_points()
+		show_stars_alt()
+	
+	Ui.clear_lines()
+	show_constellation()
+	
+	Ui.show_drawing()
 	
 	start_roll()
 	
@@ -58,19 +84,16 @@ func zoom() -> void :
 
 
 
-func move() -> void :
+func move() -> bool :
 	var target = project_ray_normal(get_viewport().get_mouse_position())
 	
 	Ui.print_text("Left Mouse Click, drag : Move", 0)
 	
-#	if target :
-#		var closest = FetchInfo.fetch_star(target)
-#
-#		if not closest :
-#			Ui.print_debug_info("Closest star : None ", 4)
-#		else :
-#			Ui.print_debug_info("Closest star : " + closest.designation, 4)
-#
+	if Gamestate.ALTERNATIVE :
+		star_name_alt(target)
+	else :
+		star_name(target)
+	
 	if Input.is_action_just_pressed("click") :
 		last_target = target
 	
@@ -79,7 +102,7 @@ func move() -> void :
 	Ui.print_debug_info("Center Normal : " + str(center), 2)
 	
 	if not Input.is_action_pressed("click") :
-		return
+		return false
 	
 	
 	if (target - last_target).length() > 0 :
@@ -93,36 +116,90 @@ func move() -> void :
 	
 	last_mouse_pos = get_viewport().get_mouse_position()
 	last_target = project_ray_normal(get_viewport().get_mouse_position())
+	
+	return true
 
 
 
-func rotate_screen() -> void :
+func star_name(target : Vector3) -> void :
+	if not target :
+		return
+	var closest = FetchInfo.fetch_star(target)
+
+	if not closest :
+		Ui.print_debug_info("Closest star : None ", 4)
+	else :
+		Ui.print_debug_info("Closest star : " + closest.designation, 4)
+
+
+
+func star_name_alt(target : Vector3) -> void :
+	if not target :
+		return
+	
+	var closest : Dictionary
+	
+	if Gamestate.ALTERNATIVE :
+		closest = FetchInfo.fetch_star_alt(target)
+	else :
+		closest = FetchInfo.fetch_star(target)
+
+	if not closest :
+		Ui.print_debug_info("Closest star : None ", 4)
+	else :
+		Ui.print_debug_info("Closest star : " + closest["name"], 4)
+
+
+
+func show_stars_alt() -> void :
+	var center_normal = project_ray_normal(CENTER)
+	
+	var total : int = 0
+	
+	for cluster in FetchInfo.Partition :
+		var c = unproject_position(cluster)
+		if not within_screen_bounds(c) :
+			continue
+		if cluster.dot(center_normal) < 0 :
+			continue
+		for star in FetchInfo.Partition[cluster] :
+			Ui.print_point(unproject_position(star["pos"]), star["color"])
+			total +=1
+	
+	Ui.print_debug_info("Total stars displayed : " + str(total), 8)
+
+
+
+func rotate_screen() -> bool :
 	Ui.print_text("Right Mouse Click, drag : Rotate", 1)
 	
 	if Input.is_action_just_pressed("r_click") :
 		last_rotate_mouse_pos = get_viewport().get_mouse_position()
 	
 	if not Input.is_action_pressed("r_click") :
-		return
+		return false
 	
 	var mouse_pos = get_viewport().get_mouse_position()
 	self.global_rotation.z -= (mouse_pos - CENTER).angle_to(last_rotate_mouse_pos - CENTER)
 	last_rotate_mouse_pos = get_viewport().get_mouse_position()
+	
+	return true
 
 
 
-func hud_constellations() -> void :
-	if Input.is_action_just_pressed("ui_cancel") :
-		display_constellations = not(display_constellations)
+func hud_constellations() -> bool :
+	if not Input.is_action_just_pressed("ui_cancel") :
+		return false
+	
+	display_constellations = not(display_constellations)
 	
 	if display_constellations :
-		show_constellation()
 		Ui.print_text("Esc : hide constellations", 2)
-	else :
-		Ui.clear_lines()
-		Ui.show_lines()
-		Ui.print_text("Esc : show constellations", 2)
-		Ui.print_debug_info("", 5)
+		return false
+	
+	Ui.print_text("Esc : show constellations", 2)
+	Ui.print_debug_info("", 5)
+	return true
 
 
 
@@ -135,12 +212,13 @@ func start_roll() -> void :
 
 
 func show_constellation() -> void :
+	if not(display_constellations) :
+		return
 	var target = project_ray_normal(get_viewport().get_mouse_position()) * RADIUS
 	var constellations = FetchInfo.fetch_constellations(target)
 	
 	var constellations_names : String = ""
 	
-	Ui.clear_lines()
 	
 	for c in constellations :
 		constellations_names += c["name"].substr(0, 3) + " - "
@@ -151,7 +229,6 @@ func show_constellation() -> void :
 				continue
 			Ui.print_line(p1 + (p2 - p1).normalized() * 10 , p2 - (p2 - p1).normalized() * 10, Color(constellation_color, c["alpha"]))
 		
-	Ui.show_lines()
 	
 	Ui.print_debug_info("Constellations : " + constellations_names.left(len(constellations_names) - 3), 5)
 
@@ -163,3 +240,16 @@ func within_screen_bounds(point : Vector2) -> bool :
 	if point.y > 900 or point.y < 0 :
 		return false
 	return true
+
+
+
+func fuzzy_within_screen_bounds(point : Vector2, delta : float) -> bool :
+	if within_screen_bounds(point + Vector2(delta, 0)) :
+		return true
+	if within_screen_bounds(point + Vector2(-delta, 0)) :
+		return true
+	if within_screen_bounds(point + Vector2(0, delta)) :
+		return true
+	if within_screen_bounds(point + Vector2(0, -delta)) :
+		return true
+	return false

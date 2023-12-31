@@ -8,7 +8,8 @@ const LENGTH : int = 20
 
 var text_info : Array 
 var debug_info : Array 
-var draw_info : Array 
+var draw_lines : Array 
+var draw_points : Array
 
 
 func update_text() -> void :
@@ -54,15 +55,25 @@ func print_debug_info(txt : String, line : int) -> void :
 
 
 func clear_lines() -> void :
-	draw_info.clear()
+	draw_lines.clear()
+
+
+
+func clear_points() -> void :
+	draw_points.clear()
 
 
 
 func print_line(start : Vector2, end : Vector2, color : Color = Color.WHITE) -> void :
-	draw_info.append({"start" : start, "end" : end, "color" : color})
+	draw_lines.append({"start" : start, "end" : end, "color" : color})
 
 
 
-func show_lines() -> void :
-	DrawingBoard.update_drawing(draw_info)
+func print_point(pos : Vector2, color : Color = Color.WHITE) -> void :
+	draw_points.append({"pos" : pos, "color" : color})
+
+
+
+func show_drawing() -> void :
+	DrawingBoard.update_drawing(draw_lines, draw_points)
 
