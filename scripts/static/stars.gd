@@ -44,39 +44,39 @@ func show_stars(Stars : Array) -> void :
 		child.queue_free()
 	
 	var progress = 0
-	
-	for star_data in Stars :
-		progress += 1
-		if progress % 1000 == 0 :
-			print("Loading... ", str(round(100.0*progress/len(Stars))), " %")
-			
-		if not star_data :
-			continue
-			
-		var star = STAR.instantiate()
-		add_child(star)
-		
-		star.global_position = cartesian_from_text(star_data["RA"], star_data["Dec"])
-		var m = star.mesh.get_active_material(0).duplicate()  
-		m.set_shader_parameter("mag", float(star_data["V"]))  
-		star.mesh.set_surface_override_material(0, m)
-		
-		if star_data.has("N") :
-			star.designation = star_data["N"]
-		if star_data.has("C") :
-			star.constellation = star_data["C"]
-			star.add_to_group(star_data["C"])
-			
-		var key = str(round(star.global_position * Infos.PRECISION / RADIUS))
-		
-		if Infos.Partition.has(key) :
-			Infos.Partition[key].append(star)
-		else :
-			Infos.Partition.merge({key : [star]})
+#
+#	for star_data in Stars :
+#		progress += 1
+#		if progress % 1000 == 0 :
+#			print("Loading... ", str(round(100.0*progress/len(Stars))), " %")
+#
+#		if not star_data :
+#			continue
+#
+#		var star = STAR.instantiate()
+#		add_child(star)
+#
+#		star.global_position = cartesian_from_text(star_data["RA"], star_data["Dec"])
+#		var m = star.mesh.get_active_material(0).duplicate()  
+#		m.set_shader_parameter("mag", float(star_data["V"]))  
+#		star.mesh.set_surface_override_material(0, m)
+#
+#		if star_data.has("N") :
+#			star.designation = star_data["N"]
+#		if star_data.has("C") :
+#			star.constellation = star_data["C"]
+#			star.add_to_group(star_data["C"])
+#
+#		var key = str(round(star.global_position * Infos.PRECISION / RADIUS))
+#
+#		if Infos.Partition.has(key) :
+#			Infos.Partition[key].append(star)
+#		else :
+#			Infos.Partition.merge({key : [star]})
 		
 	print("Partitions : ", len(Infos.Partition))
-	@warning_ignore("integer_division")
-	print("Stars per Partition : ", len(Stars)/len(Infos.Partition))
+#	@warning_ignore("integer_division")
+#	print("Stars per Partition : ", len(Stars)/len(Infos.Partition))
 
 
 

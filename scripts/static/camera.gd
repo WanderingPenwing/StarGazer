@@ -63,14 +63,14 @@ func move() -> void :
 	
 	Ui.print_text("Left Mouse Click, drag : Move", 0)
 	
-	if target :
-		var closest = FetchInfo.fetch_star(target)
-		
-		if not closest :
-			Ui.print_debug_info("Closest star : None ", 4)
-		else :
-			Ui.print_debug_info("Closest star : " + closest.designation, 4)
-	
+#	if target :
+#		var closest = FetchInfo.fetch_star(target)
+#
+#		if not closest :
+#			Ui.print_debug_info("Closest star : None ", 4)
+#		else :
+#			Ui.print_debug_info("Closest star : " + closest.designation, 4)
+#
 	if Input.is_action_just_pressed("click") :
 		last_target = target
 	
