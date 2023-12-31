@@ -12,8 +12,8 @@ const RADIUS : float = 40
 
 
 func _ready() -> void:
-	var Stars = load_stars()
-	show_stars(Stars)
+#	var Stars = load_stars()
+#	show_stars(Stars)
 	
 	var Consts = load_constellations()
 	format_constellations(Consts)
