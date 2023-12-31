@@ -21,13 +21,13 @@ sky = SubResource("Sky_mpvso")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fgj0m")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("Ui", "FetchInfo")]
+[node name="main camera" type="Camera3D" parent="." node_paths=PackedStringArray("Ui", "FetchInfo")]
 script = ExtResource("1_k0oc1")
 Ui = NodePath("ui")
 FetchInfo = NodePath("../Fetch Info")
 constellation_color = Color(0.662745, 0.662745, 0.760784, 1)
 
-[node name="ui" parent="Camera3D" instance=ExtResource("3_tm35m")]
+[node name="ui" parent="main camera" instance=ExtResource("3_tm35m")]
 
 [node name="Stars" type="Node3D" parent="." node_paths=PackedStringArray("Infos")]
 script = ExtResource("4_bplbk")
@@ -35,4 +35,4 @@ Infos = NodePath("../Fetch Info")
 
 [node name="Fetch Info" type="Node3D" parent="." node_paths=PackedStringArray("Ui")]
 script = ExtResource("5_jxv7x")
-Ui = NodePath("../Camera3D/ui")
+Ui = NodePath("../main camera/ui")

@@ -32,26 +32,6 @@ func fetch_star(_target : Vector3) -> Node :
 
 
 
-func fetch_star_alt(_target : Vector3) -> Dictionary :
-	var key = str(round(_target * PRECISION))
-	if not Partition.has(key) :
-		Ui.print_debug_info("target chunk size : 0 ", 3)
-		return {}
-	Ui.print_debug_info("target chunk size : " + str(len(Partition[key])), 3)
-	
-	var closest : Dictionary
-	for star in Partition[key] :
-		if not closest :
-			closest = star
-			continue
-		if star["pos"].distance_squared_to(_target) > closest["pos"].distance_squared_to(_target) :
-			continue
-		closest = star
-	
-	return closest
-
-
-
 func fetch_constellations(_target : Vector3) -> Array :
 	var Consts = Constellations.keys()
 	target = _target

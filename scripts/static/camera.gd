@@ -25,12 +25,6 @@ var display_constellations : bool = false
 
 
 func _ready() -> void :
-	if Gamestate.ALTERNATIVE :
-		Ui.clear_points()
-		show_stars_alt()
-
-		Ui.show_drawing()
-	
 	Ui.print_text("Esc : show constellations", 2)
 
 
@@ -48,13 +42,8 @@ func _process(delta: float) -> void :
 	
 	hud_constellations()
 	
-	if Gamestate.ALTERNATIVE :
-		Ui.clear_points()
-		show_stars_alt()
-	
 	Ui.clear_lines()
 	show_constellation()
-	
 	Ui.show_drawing()
 	
 	start_roll()
@@ -89,10 +78,7 @@ func move() -> bool :
 	
 	Ui.print_text("Left Mouse Click, drag : Move", 0)
 	
-	if Gamestate.ALTERNATIVE :
-		star_name_alt(target)
-	else :
-		star_name(target)
+	star_name(target)
 	
 	if Input.is_action_just_pressed("click") :
 		last_target = target
@@ -129,44 +115,7 @@ func star_name(target : Vector3) -> void :
 	if not closest :
 		Ui.print_debug_info("Closest star : None ", 4)
 	else :
-		Ui.print_debug_info("Closest star : " + closest.designation, 4)
-
-
-
-func star_name_alt(target : Vector3) -> void :
-	if not target :
-		return
-	
-	var closest : Dictionary
-	
-	if Gamestate.ALTERNATIVE :
-		closest = FetchInfo.fetch_star_alt(target)
-	else :
-		closest = FetchInfo.fetch_star(target)
-
-	if not closest :
-		Ui.print_debug_info("Closest star : None ", 4)
-	else :
-		Ui.print_debug_info("Closest star : " + closest["name"], 4)
-
-
-
-func show_stars_alt() -> void :
-	var center_normal = project_ray_normal(CENTER)
-	
-	var total : int = 0
-	
-	for cluster in FetchInfo.Partition :
-		var c = unproject_position(cluster)
-		if not within_screen_bounds(c) :
-			continue
-		if cluster.dot(center_normal) < 0 :
-			continue
-		for star in FetchInfo.Partition[cluster] :
-			Ui.print_point(unproject_position(star["pos"]), star["color"])
-			total +=1
-	
-	Ui.print_debug_info("Total stars displayed : " + str(total), 8)
+		Ui.print_debug_info("Closest star : WIP", 4)
 
 
 

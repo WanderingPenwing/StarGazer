@@ -1,7 +1,6 @@
 extends Node
 
 const SAVE_FILE : String = "user://state.save"
-const ALTERNATIVE : bool = true
 
 var master_sound : int = 50
 var sfx : int = 50
